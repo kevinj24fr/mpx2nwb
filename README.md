@@ -1,5 +1,6 @@
 # mpx2nwb
 
+[![CI](https://github.com/kevinj24fr/mpx2nwb/actions/workflows/ci.yml/badge.svg)](https://github.com/kevinj24fr/mpx2nwb/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Convert Alpha Omega AlphaLab SnR `.mpx` electrophysiology recordings to
