@@ -23,8 +23,15 @@ jobs:
       - name: Install HDF5 (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install hdf5@1.14
-          echo "HDF5_DIR=$(brew --prefix hdf5@1.14)" >> "$GITHUB_ENV"
+          brew update
+          # Prefer 1.14; fall back to 1.10, which is always present on the runners.
+          if brew install hdf5@1.14; then
+            keg=hdf5@1.14
+          else
+            brew install hdf5@1.10
+            keg=hdf5@1.10
+          fi
+          echo "HDF5_DIR=$(brew --prefix $keg)" >> "$GITHUB_ENV"
 
       - uses: dtolnay/rust-toolchain@stable
         with:

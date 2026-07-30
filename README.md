@@ -32,8 +32,8 @@ sudo dnf install hdf5-devel          # Fedora / RHEL
 
 **macOS:** Homebrew's unversioned `hdf5` formula is now 2.2.x, which the
 `hdf5-metno-sys` build script rejects with `Invalid H5_VERSION` — it supports 1.8
-through 1.14, plus 2.0.0 and 2.1.0. Use the pinned 1.14 keg, and because it is
-keg-only, export its prefix:
+through 1.14, plus 2.0.0 and 2.1.0. Use a pinned 1.x keg (`hdf5@1.14`, or `hdf5@1.10` if your
+tap lacks it) and, because they are keg-only, export the prefix:
 
 ```sh
 export HDF5_DIR=$(brew --prefix hdf5@1.14)
