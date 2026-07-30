@@ -3,23 +3,20 @@
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Convert Alpha Omega AlphaLab SnR `.mpx` electrophysiology recordings to
-[NWB 2.7](https://nwb-schema.readthedocs.io/). Pure Rust — no Python in the
-conversion path. Output validates against `pynwb` with zero errors.
-
+[NWB 2.7](https://nwb-schema.readthedocs.io/). 
 ```sh
 mpx2nwb --batch ./raw --outdir ./nwb --subject-field 2 --jobs 5
 ```
 
-Converts a 1 GB recording in ~13 s at 3.6× compression, merges split segments, and
+Converts mpx recordings to nwb at 3.6× compression, merges split segments, and
 refuses to merge across recording gaps.
 
 ## Why
 
-`.mpx` has no public specification and no maintained Rust reader. The existing route
+`.mpx` has no public specification and the existing route
 into open formats runs through Python (`neo` → `spikeinterface` → `neuroconv`), which
 works but is slow over large archives and pulls a heavy dependency tree in just to
-transcode. This does the transcode step alone, quickly, then gets out of the way so the
-science runs on standard tooling.
+transcode. This does the transcode step alone for downstream usage with standard tooling.
 
 ## Install
 
@@ -38,51 +35,8 @@ sudo dnf install hdf5-devel          # Fedora / RHEL
 Installs the binary to `~/.cargo/bin/mpx2nwb`, no clone needed:
 
 ```sh
-cargo install --git https://github.com/USER/mpx2nwb
+cargo install --git https://github.com/kevinj24fr/mpx2nwb
 ```
-
-Pin to a tag or commit for a reproducible install:
-
-```sh
-cargo install --git https://github.com/USER/mpx2nwb --tag v0.1.0
-cargo install --git https://github.com/USER/mpx2nwb --rev <commit-sha>
-```
-
-To update later, add `--force`. To remove it, `cargo uninstall mpx2nwb`.
-
-Check it worked:
-
-```sh
-mpx2nwb --version
-```
-
-If the command isn't found, `~/.cargo/bin` is not on your `PATH`; rustup normally adds
-it, but a new shell may be needed.
-
-### From a clone
-
-Preferable if you want to run the tests or modify anything:
-
-```sh
-git clone https://github.com/USER/mpx2nwb
-cd mpx2nwb
-cargo build --release        # binary at target/release/mpx2nwb
-cargo test                   # optional
-cargo install --path .       # optional, puts it on PATH
-```
-
-### If the build can't find HDF5
-
-The build script locates libhdf5 through `pkg-config`, which works out of the box for
-all three package managers above. If it fails — a non-standard prefix, or Homebrew on
-an Intel Mac — point it at the install directly:
-
-```sh
-HDF5_DIR=$(brew --prefix hdf5) cargo install --git https://github.com/USER/mpx2nwb
-```
-
-Note that `hdf5-metno-sys` requires HDF5 1.10 or newer; the older `hdf5` crate rejects
-1.14, which is why this uses the maintained fork.
 
 ## Use
 
@@ -105,12 +59,12 @@ mpx2nwb --batch ./raw --outdir ./nwb --subject-field 2 --jobs 5
 mpx2nwb --batch ./raw --outdir ./nwb --dry-run        # list first
 ```
 
-## Behaviour worth knowing
+## Design Decisions
 
 **Segment merging.** Acquisition splits long recordings at a size limit into
 `NAME_0001.mpx`, `NAME_0002.mpx`, … These are contiguous halves of one recording, not
 separate trials. Batch mode groups them automatically; segments are verified to have the
-same format, sample rate and channel set, **and to abut on the acquisition clock** — a
+same format, sample rate and channel set, **and to abut on the acquisition clock** a
 gap is an error rather than a silent timeline shift.
 
 **Amplitude scaling.** Samples are stored as raw `int16` with the NWB `conversion`
@@ -131,7 +85,7 @@ than written as zero columns.
 **Format gating.** Only map format 4 is accepted. Other versions are rejected rather
 than guessed at.
 
-**Deterministic output.** Object identifiers are derived from filename, session start
+Object identifiers are derived from filename, session start
 and stream, so re-running on the same input reproduces the same file.
 
 ## Output layout
@@ -163,24 +117,6 @@ declares a channel, `5` carries continuous samples. Field offsets are documented
 Samples read back through `pynwb` are bit-identical to a direct `.mpx` read, and
 `pynwb.validate` reports no errors. `cargo test` covers CLI parsing and the segment
 grouping rule.
-
-## Publishing checklist
-
-Before the first push, replace `USER` in `Cargo.toml` (`repository`, `homepage`) and in
-the badge URLs above, and set a real `authors` entry. Then set the repository topics so
-the tool is findable by the format names people actually search for:
-
-```sh
-gh repo edit --add-topic nwb \
-             --add-topic electrophysiology \
-             --add-topic neuroscience \
-             --add-topic alpha-omega \
-             --add-topic hdf5 \
-             --add-topic rust \
-             --add-topic neurodata-without-borders
-```
-
-`cargo publish --dry-run` before publishing to crates.io.
 
 ## License
 
