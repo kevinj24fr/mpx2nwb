@@ -1,0 +1,24 @@
+[package]
+name = "mpx2nwb"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+description = "Convert Alpha Omega AlphaLab SnR .mpx electrophysiology recordings to NWB 2.7"
+authors = ["Cestmir Project"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/USER/mpx2nwb"
+homepage = "https://github.com/USER/mpx2nwb"
+documentation = "https://docs.rs/mpx2nwb"
+keywords = ["neuroscience", "electrophysiology", "nwb", "hdf5", "alphaomega"]
+categories = ["science", "command-line-utilities"]
+exclude = ["/.github", "/tests/data"]
+
+[dependencies]
+hdf5-metno = "0.10"
+ndarray = "0.16"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
