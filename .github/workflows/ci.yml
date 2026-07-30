@@ -11,27 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Linux exercises the system-library path...
       - name: Install HDF5 (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libhdf5-dev pkg-config
+          echo "CARGO_FEATURES=" >> "$GITHUB_ENV"
 
-      # Homebrew's unversioned `hdf5` formula is now 2.2.x, which hdf5-metno-sys
-      # does not recognise (it knows 1.8-1.14, 2.0.0 and 2.1.0). Pin the 1.14 keg,
-      # which is keg-only, so the prefix has to be passed explicitly.
-      - name: Install HDF5 (macOS)
+      # ...and macOS the vendored one. Homebrew now ships HDF5 2.2.x, which
+      # hdf5-metno-sys rejects, and the pinned 1.x formulae have been removed, so
+      # building from source is the only route that works there.
+      - name: Use vendored HDF5 (macOS)
         if: runner.os == 'macOS'
-        run: |
-          brew update
-          # Prefer 1.14; fall back to 1.10, which is always present on the runners.
-          if brew install hdf5@1.14; then
-            keg=hdf5@1.14
-          else
-            brew install hdf5@1.10
-            keg=hdf5@1.10
-          fi
-          echo "HDF5_DIR=$(brew --prefix $keg)" >> "$GITHUB_ENV"
+        run: echo "CARGO_FEATURES=--features static" >> "$GITHUB_ENV"
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -40,5 +33,5 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - run: cargo fmt --check
-      - run: cargo clippy --all-targets -- -D warnings
-      - run: cargo test --all
+      - run: cargo clippy --all-targets $CARGO_FEATURES -- -D warnings
+      - run: cargo test --all $CARGO_FEATURES

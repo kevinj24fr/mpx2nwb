@@ -20,34 +20,35 @@ transcode. This does the transcode step alone for downstream usage with standard
 
 ## Install
 
-### Prerequisites
+### From GitHub (recommended)
 
-[Rust](https://rustup.rs/) 1.74 or newer, and libhdf5:
+Builds HDF5 from source, so there is no system library to install. Needs
+[Rust](https://rustup.rs/) 1.74+ and `cmake`:
 
 ```sh
-brew install hdf5@1.14               # macOS -- not plain `hdf5`, see below
+cargo install --git https://github.com/kevinj24fr/mpx2nwb --features static
+```
+
+That puts `mpx2nwb` in `~/.cargo/bin`. Check it with `mpx2nwb --version`.
+
+### Using a system HDF5
+
+Faster to build, but needs a version `hdf5-metno-sys` supports — 1.8 through 1.14,
+or 2.0.0/2.1.0:
+
+```sh
 sudo apt-get install libhdf5-dev     # Debian / Ubuntu
 sudo dnf install hdf5-devel          # Fedora / RHEL
-```
 
-**macOS:** Homebrew's unversioned `hdf5` formula is now 2.2.x, which the
-`hdf5-metno-sys` build script rejects with `Invalid H5_VERSION` — it supports 1.8
-through 1.14, plus 2.0.0 and 2.1.0. Use a pinned 1.x keg (`hdf5@1.14`, or `hdf5@1.10` if your
-tap lacks it) and, because they are keg-only, export the prefix:
-
-```sh
-export HDF5_DIR=$(brew --prefix hdf5@1.14)
-```
-
-On Linux, `libhdf5-dev` is found via `pkg-config` with no extra configuration.
-
-### From GitHub
-
-Installs the binary to `~/.cargo/bin/mpx2nwb`, no clone needed:
-
-```sh
 cargo install --git https://github.com/kevinj24fr/mpx2nwb
 ```
+
+On Linux the library is found through `pkg-config` with no extra configuration. If it
+lives in a non-standard prefix, set `HDF5_DIR` to point at it.
+
+**macOS users should use the `--features static` build above.** Homebrew now ships
+HDF5 2.2.x, which the build script rejects with `Invalid H5_VERSION`, and the pinned
+`hdf5@1.14` / `hdf5@1.10` formulae have been removed.
 
 ## Use
 

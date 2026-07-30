@@ -14,6 +14,12 @@ keywords = ["neuroscience", "electrophysiology", "nwb", "hdf5", "alphaomega"]
 categories = ["science", "command-line-utilities"]
 exclude = ["/.github", "/tests/data"]
 
+[features]
+# Build HDF5 from source rather than linking a system library. Requires cmake, but
+# removes the libhdf5 install step entirely. Currently the only working route on
+# macOS, where Homebrew ships 2.2.x and has dropped the 1.x formulae.
+static = ["hdf5-metno/static", "hdf5-metno/zlib"]
+
 [dependencies]
 hdf5-metno = "0.10"
 ndarray = "0.16"
