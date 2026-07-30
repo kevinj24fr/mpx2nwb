@@ -1,6 +1,5 @@
 # mpx2nwb
 
-[![CI](https://github.com/USER/mpx2nwb/actions/workflows/ci.yml/badge.svg)](https://github.com/USER/mpx2nwb/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/mpx2nwb.svg)](https://crates.io/crates/mpx2nwb)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
