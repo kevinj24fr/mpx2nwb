@@ -1,6 +1,5 @@
 # mpx2nwb
 
-[![crates.io](https://img.shields.io/crates/v/mpx2nwb.svg)](https://crates.io/crates/mpx2nwb)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Convert Alpha Omega AlphaLab SnR `.mpx` electrophysiology recordings to
