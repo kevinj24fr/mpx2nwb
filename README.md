@@ -25,7 +25,7 @@ transcode. This does the transcode step alone for downstream usage with standard
 [Rust](https://rustup.rs/) 1.74 or newer, and libhdf5:
 
 ```sh
-brew install hdf5                    # macOS
+brew install hdf5@1.14               # macOS -- see note below
 sudo apt-get install libhdf5-dev     # Debian / Ubuntu
 sudo dnf install hdf5-devel          # Fedora / RHEL
 ```

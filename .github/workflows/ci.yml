@@ -17,13 +17,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libhdf5-dev pkg-config
 
-      # The hdf5-metno-sys build script probes Homebrew but does not find the keg on
-      # the hosted runners, so point it at the prefix explicitly.
+      # Homebrew's unversioned `hdf5` formula is now 2.2.x, which hdf5-metno-sys
+      # does not recognise (it knows 1.8-1.14, 2.0.0 and 2.1.0). Pin the 1.14 keg,
+      # which is keg-only, so the prefix has to be passed explicitly.
       - name: Install HDF5 (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install hdf5
-          echo "HDF5_DIR=$(brew --prefix hdf5)" >> "$GITHUB_ENV"
+          brew install hdf5@1.14
+          echo "HDF5_DIR=$(brew --prefix hdf5@1.14)" >> "$GITHUB_ENV"
 
       - uses: dtolnay/rust-toolchain@stable
         with:
