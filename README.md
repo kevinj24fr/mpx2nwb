@@ -25,10 +25,21 @@ transcode. This does the transcode step alone for downstream usage with standard
 [Rust](https://rustup.rs/) 1.74 or newer, and libhdf5:
 
 ```sh
-brew install hdf5@1.14               # macOS -- see note below
+brew install hdf5@1.14               # macOS -- not plain `hdf5`, see below
 sudo apt-get install libhdf5-dev     # Debian / Ubuntu
 sudo dnf install hdf5-devel          # Fedora / RHEL
 ```
+
+**macOS:** Homebrew's unversioned `hdf5` formula is now 2.2.x, which the
+`hdf5-metno-sys` build script rejects with `Invalid H5_VERSION` — it supports 1.8
+through 1.14, plus 2.0.0 and 2.1.0. Use the pinned 1.14 keg, and because it is
+keg-only, export its prefix:
+
+```sh
+export HDF5_DIR=$(brew --prefix hdf5@1.14)
+```
+
+On Linux, `libhdf5-dev` is found via `pkg-config` with no extra configuration.
 
 ### From GitHub
 
