@@ -134,3 +134,7 @@ grouping rule.
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+---
+
+Built by [Kevin Joseph](https://kevinj24fr.github.io/), NeuroEngineering, Department of Neurosurgery, Medical Center – University of Freiburg.
